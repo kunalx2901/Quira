@@ -1,6 +1,7 @@
 import zod from "zod";
 import User from "../models/User.js";
 import jwt from "jsonwebtoken"
+import { createStreamUser } from "../models/Stream.js";
 
 
 export const signupSchema = zod.object({
@@ -38,6 +39,17 @@ export const signup = async (req,res)=>{
         password,
         profileAvatar
     })
+
+    try{
+        await createStreamUser({
+            id:newUser._id,
+            name:newUser.fullName,
+            image:newUser.profileAvatar
+        })
+        console.log(`Stream user created ${newUser.fullName}`)
+    }catch(e){
+        console.error("error while creating stream user",e);
+    }
 
     const token = jwt.sign({userId:newUser._id},process.env.JWT_SECRET_KEY,{
         expiresIn:"7d"
