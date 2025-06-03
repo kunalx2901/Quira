@@ -1,7 +1,6 @@
 import User from "../models/User.js";
 
 export async function getRecommendedUser(){
-
     try {
         
         const currentUserId = req.user.id;
@@ -24,5 +23,13 @@ export async function getRecommendedUser(){
 }
 
 export async function getFriends(){
-
+    try{
+        const users = await User.findById(req.user.id).select("friends")
+        .populate("friends","fullName profileAvatar location bio") //this helps to get all the friends with all the given features like full name , avatar , bio , location
+    
+        res.status(200).json(users.friends);
+    }catch(e){
+        console.log("error while loading friends list",e);
+        res.status(500).send('error while loading friend list');
+    }
 }
