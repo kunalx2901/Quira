@@ -18,6 +18,12 @@ const userSchema = mongoose.Schema({
     profileAvatar:{
         type:String
     },
+    bio:{
+        type:String
+    },
+    location:{
+        type:String
+    },
     isOnBoarded:{
         type:Boolean,
         default:false

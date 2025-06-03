@@ -2,6 +2,7 @@ import zod from "zod";
 import User from "../models/User.js";
 import jwt from "jsonwebtoken"
 import { createStreamUser } from "../models/Stream.js";
+import { StreamChat } from "stream-chat";
 
 
 export const signupSchema = zod.object({
@@ -116,4 +117,42 @@ export const login = async(req,res)=>{
 export const logout = (req,res)=>{ 
     res.clearCookie("jwt");
     res.status(200).send({success:true,message:"Logged out successfully"});
+}
+
+export const onboard = async(req,res)=>{
+    try {
+        
+        const userId = req.user._id;
+        const {fullName, bio, location} = req.body;
+
+        if(!fullName || !bio || !location){
+            return res.status(400).send("All Fields are required !");
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(userId,{
+            ...req.body,
+            isOnBoarded:true
+        },{new:true});
+
+        if(!updatedUser){
+            return res.status(404).send("User not found");
+        }
+
+        try {
+            await createStreamUser({
+                id:updatedUser._id.toString(),
+                name:updatedUser.fullName,
+                image:updatedUser.profileAvatar
+            })
+            console.log(`Stream user updated to ${updatedUser.fullName}`);
+        } catch (error) {
+            console.log("error in updating the Stream user ", error);
+        }
+
+        res.status(200).send({sucess:true,user:updatedUser});
+
+    } catch (error) {
+        console.log("Error while Onboarding!",error);
+        res.status(500).send("Error while Onboarding !");
+    }
 }
