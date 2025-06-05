@@ -137,3 +137,21 @@ export async function getFriendRequest(req,res){
         res.status(500).json({msg:"error in fetching the incoming request"});
     }
 }
+
+export async function getOutgoingRequest(req,res){
+    try{
+        const outgoingRequest = await FriendRequest.findOne({
+            sender:req.user.id,
+            status:"pending"
+        }).populate("recipient","fullName profileAvatar location");
+
+        if(!outgoingRequest){
+            return res.status(401).json({msg:"Unable to find outgoing request"});
+        }
+
+        res.status(200).json(outgoingRequest);
+    }catch(e){
+        console.log("error in fetching the Outgoing Request: ", e);
+        res.status(500).json("error in fetching the Outgoing Request ");
+    }
+}
