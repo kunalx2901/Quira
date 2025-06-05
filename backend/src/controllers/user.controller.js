@@ -116,3 +116,24 @@ export async function acceptFriendRequest(req,res){
         res.status(500).json({msg:"Error in Accepting Request"});
     }
 }
+
+export async function getFriendRequest(req,res){
+    try{
+        // request that i haven't accepted 
+        const incomingRequest = await FriendRequest.findOne({
+            recipient:req.user.id,
+            status:"pending"
+        }).populate("sender","fullName profileAvatar location");
+
+        // request that i have accepted 
+        const acceptedRequest = await FriendRequest.findOne({
+            sender:req.user.id,
+            status:"accepted"
+        }).populate("recipient","fullName profileAvatar bio location");
+
+        res.status(200).json(incomingRequest , acceptedRequest)
+    }catch(e){
+        console.log("error in fetching the incoming request ", e);
+        res.status(500).json({msg:"error in fetching the incoming request"});
+    }
+}
