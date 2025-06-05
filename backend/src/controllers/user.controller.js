@@ -38,7 +38,7 @@ export async function getFriends(){
 export async function sendFriendRequest(){
     try {
         const senderId = req.user.id;
-        const { id: recipientId} = req.params.id;
+        const { id: recipientId} = req.params;
 
         // you can't send request to yourself 
         if(senderId == recipientId){
@@ -77,5 +77,42 @@ export async function sendFriendRequest(){
     } catch (error) {
         console.log("Error in Sending Request: ",error);
         res.status(500).json({msg:"Error in Sending Request"});        
+    }
+}
+
+export async function acceptFriendRequest(){
+    try{
+        const {id:requestId} = req.params;
+
+        const friendRequest = await FriendRequest.findById(requestId);
+        if(!friendRequest){
+            return res.status(401).json({msg:"Error in fecthing details of the reuest"});
+        }
+
+        //sender can not accept the request sent
+        if(friendRequest.recipient.toString() !== req.user.id){
+            return res.status(401).json({msg:"You are not the recipient of this request"});
+        }
+
+        friendRequest.status = "accepted";
+        await friendRequest.save();
+
+        // adding the user's in each other's friends list 
+        await User.findByIdAndUpdate(friendRequest.sender,{
+            $addToSet:{
+                friends:friendRequest.recipient
+            }
+        });
+
+        await User.findByIdAndUpdate(friendRequest.recipient,{
+            $addToSet:{
+                friends:friendRequest.sender
+            }
+        });
+
+        res.status(200).json({msg:"Friend Request Accepted !"});
+    }catch(error){
+        console.log("Error in Accepting Request: ", error);
+        res.status(500).json({msg:"Error in Accepting Request"});
     }
 }
