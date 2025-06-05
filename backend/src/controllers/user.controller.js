@@ -1,7 +1,7 @@
 import FriendRequest from "../models/FriendRequest.js";
 import User from "../models/User.js";
 
-export async function getRecommendedUser(){
+export async function getRecommendedUser(req,res){
     try {
         
         const currentUserId = req.user.id;
@@ -23,7 +23,7 @@ export async function getRecommendedUser(){
     }
 }
 
-export async function getFriends(){
+export async function getFriends(req,res){
     try{
         const users = await User.findById(req.user.id).select("friends")
         .populate("friends","fullName profileAvatar location bio") //this helps to get all the friends with all the given features like full name , avatar , bio , location
@@ -35,7 +35,7 @@ export async function getFriends(){
     }
 }
 
-export async function sendFriendRequest(){
+export async function sendFriendRequest(req,res){
     try {
         const senderId = req.user.id;
         const { id: recipientId} = req.params;
@@ -80,7 +80,7 @@ export async function sendFriendRequest(){
     }
 }
 
-export async function acceptFriendRequest(){
+export async function acceptFriendRequest(req,res){
     try{
         const {id:requestId} = req.params;
 
