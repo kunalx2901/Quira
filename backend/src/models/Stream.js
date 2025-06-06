@@ -15,6 +15,12 @@ export const createStreamUser = async(userData)=>{
     }
 }
 
-export const generateStreamToken = async()=>{
-
+export const generateStreamToken = async(userId)=>{
+    try{
+        // ensure that the id is always a string
+        const userIdStr = userId.toString();
+        return streamClient.createToken(userIdStr);
+    }catch(e){
+        console.error("Error while generating Stream token");
+    }
 }
