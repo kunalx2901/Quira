@@ -23,7 +23,7 @@ const App = () => {
         retry:false
       })
 
-      const authUser = authData?.user;
+    const authUser = authData?.user;
 
   return (
     <div className="text-2xl h-screen " data-theme="bumblebee">

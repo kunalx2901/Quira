@@ -1,27 +1,44 @@
 import React, { useState } from 'react';
-import { Navigate } from 'react-router';
+// import { Navigate } from 'react-router';
+import {QueryClient, useMutation} from "@tanstack/react-query"
+import { axiosInstance } from '../lib/axios';
+import { useNavigate } from 'react-router-dom';
+
+const queryClient = new QueryClient();
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [signupData, setSignupData] = useState({
     fullName: '',
     email: '',
     password: '',
   });
 
+
+
   const handleChange = (e) => {
     setSignupData({ ...signupData, [e.target.name]: e.target.value });
   };
 
+  const {mutate, isPending, error} = useMutation({
+    mutationFn: async()=>{
+      const response = await axiosInstance.post("/auth/signup", signupData);
+      return response.data;
+    },
+    onSuccess: ()=>{
+      navigate('/login');   
+    }
+  })
+
   const handleSignup = (e) => {
     e.preventDefault();
-    // TODO: Add Firebase/Auth logic
-    console.log('Signing up with:', signupData);
+    mutate();
   };
 
 
   return (
-    <div className="flex flex-col md:flex-row h-screen w-screen px-60 py-44" data-theme="light">
-      <div className='border-2 border-gray-200 border-solid shadow-xl shadow-gray-300 rounded-lg flex w-full'>
+    <div className="flex flex-col justify-center items-center md:flex-row h-screen w-screen lg:px-60 lg:py-44 " data-theme="light">
+      <div className='border-2 border-gray-200 border-solid shadow-xl shadow-gray-300 rounded-lg flex lg:w-full'>
           {/* Left side - Branding/Illustration */}
       <div className="md:w-1/2 w-full bg-base-200 hidden lg:flex items-center justify-center p-8 text-center">
         <div>
@@ -90,11 +107,11 @@ const SignUp = () => {
           </div>
 
           <button type="submit" className="btn btn-primary w-full mt-4">
-            Sign Up
+            {isPending ? "Signing Up" : "Sign Up"}
           </button>
 
           <p className="text-sm text-center mt-2">
-            Already have an account? <a className="link link-primary">Log in</a>
+            Already have an account? <a href="/login" className="link link-primary">Log in</a>
           </p>
         </form>
       </div>
