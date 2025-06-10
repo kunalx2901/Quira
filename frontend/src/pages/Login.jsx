@@ -24,19 +24,8 @@ const Login = () => {
       const response = await axiosInstance.post('/auth/login', loginData);
       return response.data;
     },
-    onSuccess: async(data) => {
-      useEffect(async()=>{
-        await queryClient.prefetchQuery({
-        queryKey: ['authUser'],
-        queryFn: () => axiosInstance.get("/auth/me").then(res => res.data)
-      });
-      try{
-        navigate('/');
-        toast.success("Logged In Successfully !")
-      }catch(e){
-        toast.error("Error while Logging In !");
-      }
-      },[])
+    onSuccess: async() => {
+      await queryClient.invalidateQueries({queryKey:['authUser']})
     },
   });
 

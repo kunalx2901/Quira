@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import { Navigate } from 'react-router';
 import {QueryClient, useMutation} from "@tanstack/react-query"
 import { axiosInstance } from '../lib/axios';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const queryClient = new QueryClient();
 
 const SignUp = () => {
+
+  const fetchMe = async () => {
+  const res = await axios.get('/api/me');
+  return res.data;
+  };
+
   const navigate = useNavigate();
   const [signupData, setSignupData] = useState({
     fullName: '',
@@ -25,10 +32,13 @@ const SignUp = () => {
       const response = await axiosInstance.post("/auth/signup", signupData);
       return response.data;
     },
-    onSuccess: ()=>{
-      navigate('/login');   
-    }
+    onSuccess: ()=> {
+      // await queryClient.prefetchQuery({queryKey:["authUser"]});
+      navigate("/")
+      toast.success("Sign up Successfull !")
+    },
   })
+
 
   const handleSignup = (e) => {
     e.preventDefault();
@@ -105,6 +115,14 @@ const SignUp = () => {
               required
             />
           </div>
+
+          {error && (
+              <div className="text-sm text-red-500 text-center">
+                {error.response.data.errors?.name && <p className="text-red-500">{error.response.data.errors.name[0]}</p>}
+                {error.response.data.errors?.email && <p className="text-red-500">{error.response.data.errors.email[0]}</p>}
+                {error.response.data.errors?.password && <p className="text-red-500">{error.response.data.errors.password[0]}</p>}
+              </div>
+            )}
 
           <button type="submit" className="btn btn-primary w-full mt-4">
             {isPending ? "Signing Up" : "Sign Up"}
