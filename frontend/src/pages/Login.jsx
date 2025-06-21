@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { QueryClient, useMutation } from '@tanstack/react-query';
-import axios from 'axios'; // Assuming you use axios
-import { axiosInstance } from '../lib/axios';
-import toast from "react-hot-toast"
+import { login } from '../lib/api';
 
 const queryClient = new QueryClient();
 
 const Login = () => {
-  const navigate = useNavigate();
 
   const [loginData, setLoginData] = useState({
     email: '',
@@ -19,11 +15,8 @@ const Login = () => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
   };
 
-  const { mutate, isPending, error } = useMutation({
-    mutationFn: async () => {
-      const response = await axiosInstance.post('/auth/login', loginData);
-      return response.data;
-    },
+  const { mutate:loginMutation, isPending, error } = useMutation({
+    mutationFn: (formData)=>login(formData),
     onSuccess: async() => {
       await queryClient.invalidateQueries({queryKey:['authUser']})
     },
@@ -31,7 +24,7 @@ const Login = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    mutate();
+    loginMutation(loginData);
   };
 
   return (

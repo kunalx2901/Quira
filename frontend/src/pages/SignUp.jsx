@@ -1,40 +1,26 @@
 import React, { useEffect, useState } from 'react';
-// import { Navigate } from 'react-router';
 import {QueryClient, useMutation} from "@tanstack/react-query"
-import { axiosInstance } from '../lib/axios';
-import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { signup } from '../lib/api.js';
 
 const queryClient = new QueryClient();
 
 const SignUp = () => {
 
-  const fetchMe = async () => {
-  const res = await axios.get('/api/me');
-  return res.data;
-  };
-
-  const navigate = useNavigate();
   const [signupData, setSignupData] = useState({
     fullName: '',
     email: '',
     password: '',
   });
 
-
-
   const handleChange = (e) => {
     setSignupData({ ...signupData, [e.target.name]: e.target.value });
   };
 
-  const {mutate, isPending, error} = useMutation({
-    mutationFn: async()=>{
-      const response = await axiosInstance.post("/auth/signup", signupData);
-      return response.data;
-    },
-    onSuccess: ()=> {
-      // await queryClient.prefetchQuery({queryKey:["authUser"]});
-      navigate("/")
+  const {mutate:signupMutation, isPending, error} = useMutation({
+    mutationFn: (formData) =>{ signup(formData)},
+    onSuccess: async()=> {
+      await queryClient.invalidateQueries({queryKey:["authUser"]});
       toast.success("Sign up Successfull !")
     },
   })
@@ -42,11 +28,12 @@ const SignUp = () => {
 
   const handleSignup = (e) => {
     e.preventDefault();
-    mutate();
+    signupMutation(signupData);
   };
 
 
   return (
+    
     <div className="flex flex-col justify-center items-center md:flex-row h-screen w-screen lg:px-60 lg:py-44 " data-theme="light">
       <div className='border-2 border-gray-200 border-solid shadow-xl shadow-gray-300 rounded-lg flex lg:w-full'>
           {/* Left side - Branding/Illustration */}
