@@ -18,7 +18,7 @@ const Login = () => {
   const { mutate:loginMutation, isPending, error } = useMutation({
     mutationFn: (formData)=>login(formData),
     onSuccess: async() => {
-      await queryClient.invalidateQueries({queryKey:['authUser']})
+      await queryClient.invalidateQueries({queryKey:['authUser']});
     },
   });
 

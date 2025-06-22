@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react';
 import {QueryClient, useMutation} from "@tanstack/react-query"
 import toast from 'react-hot-toast';
 import { signup } from '../lib/api.js';
+import useAuthUser from '../hooks/useAuthUser.js';
 
 const queryClient = new QueryClient();
 
 const SignUp = () => {
+  const authUser = useAuthUser();
+  const isAuthenticated = Boolean(authUser);
 
   const [signupData, setSignupData] = useState({
     fullName: '',
@@ -20,9 +23,13 @@ const SignUp = () => {
   const {mutate:signupMutation, isPending, error} = useMutation({
     mutationFn: (formData) =>{ signup(formData)},
     onSuccess: async()=> {
-      await queryClient.invalidateQueries({queryKey:["authUser"]});
-      toast.success("Sign up Successfull !")
+      if(isAuthenticated){
+        toast.success("Sign up Successfull !")
+      }
     },
+    onError: (error) =>{
+      toast.error("Error Occured !");
+    }
   })
 
 

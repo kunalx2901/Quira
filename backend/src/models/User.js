@@ -16,7 +16,7 @@ const userSchema = mongoose.Schema({
         required:true,
     },
     profileAvatar:{
-        type:String
+        type:String,
     },
     bio:{
         type:String

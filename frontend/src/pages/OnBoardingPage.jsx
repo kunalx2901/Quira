@@ -1,15 +1,33 @@
 import React, { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import toast, { LoaderIcon } from 'react-hot-toast';
+import { completingOnboarding } from '../lib/api.js';
 
-const avatars = [
-  'https://api.dicebear.com/7.x/bottts/svg?seed=Felix',
-  'https://api.dicebear.com/7.x/bottts/svg?seed=Tiger',
-  'https://api.dicebear.com/7.x/bottts/svg?seed=Spark',
-  'https://api.dicebear.com/7.x/bottts/svg?seed=Nova'
-];
+import useAuthUser from '../hooks/useAuthUser.js';
+
 
 export default function OnboardingPage() {
-  const [form, setForm] = useState({ fullName: '', bio: '', location: '' });
-  const [avatar, setAvatar] = useState(avatars[Math.floor(Math.random() * avatars.length)]);
+
+  const queryClient = useQueryClient();
+  const authUser = useAuthUser();
+
+  const [form, setForm] = useState({
+    fullName: authUser?.fullName || "",
+    bio: authUser?.bio || "",
+    profileAvatar: authUser?.profileAvatar || '',
+    location: authUser?.location || ""
+  });
+
+  const { mutate: onBoardingMutation, isPending } = useMutation({
+    mutationFn: completingOnboarding,
+    onSuccess: async () => {
+      toast.success('Profile is Completed!');
+      await queryClient.invalidateQueries({ queryKey: ['authUser'] });
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
+  });
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -17,12 +35,15 @@ export default function OnboardingPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Onboarding submitted:', { ...form, avatar });
+    onBoardingMutation(form);
   };
 
-  const handleNewAvatar = () => {
-    const random = avatars[Math.floor(Math.random() * avatars.length)];
-    setAvatar(random);
+  const handleNewAvatar = async() => {
+    const random = Math.floor(Math.random() * 100) + 1;
+    console.log(random);
+    const avatar = `https://avatar.iran.liara.run/public/${random}.png`
+    setForm({ ...form, profileAvatar: avatar });
+    await toast.success("Random Avatar Generated!");
   };
 
   return (
@@ -30,17 +51,17 @@ export default function OnboardingPage() {
       <div className="w-full max-w-xl bg-white shadow-xl rounded-xl p-8">
         <h1 className="text-3xl font-bold text-center mb-8 text-blue-600">Complete Your Profile</h1>
 
-        <div className="text-center">
-            <label className="block text-sm font-medium mb-2">Profile Avatar</label>
-            <img
-              src={avatar}
-              alt="Profile Avatar"
-              className="mx-auto h-24 w-24 rounded-full border-4 border-blue-200 shadow-md"
-            />
-            <button type="button" className="btn btn-outline btn-sm mt-2" onClick={handleNewAvatar}>
-              Randomize Avatar
-            </button>
-          </div>
+        <div className="text-center mb-4">
+          <label className="block text-sm font-medium mb-2">Profile Avatar</label>
+          <img
+            src={form.profileAvatar}
+            alt="Profile Avatar"
+            className="mx-auto h-24 w-24 rounded-full border-4 border-blue-200 shadow-md"
+          />
+          <button type="button" className="btn btn-outline btn-sm mt-2" onClick={handleNewAvatar}>
+            Randomize Avatar
+          </button>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
@@ -80,7 +101,13 @@ export default function OnboardingPage() {
           </div>
 
           <button type="submit" className="btn btn-primary w-full">
-            Get Started
+            {isPending ? (
+              <span className="flex items-center justify-center gap-2">
+                <LoaderIcon /> Onboarding...
+              </span>
+            ) : (
+              "Complete Onboarding"
+            )}
           </button>
         </form>
       </div>
