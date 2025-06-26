@@ -53,11 +53,15 @@ export default function OnboardingPage() {
 
         <div className="text-center mb-4">
           <label className="block text-sm font-medium mb-2">Profile Avatar</label>
-          <img
+          {profileAvatar == '' ? <img
+            src="/profile.png"
+            alt="Profile Avatar"
+            className="mx-auto h-24 w-24 rounded-full border-4 border-blue-200 shadow-md"
+          /> : <img
             src={form.profileAvatar}
             alt="Profile Avatar"
             className="mx-auto h-24 w-24 rounded-full border-4 border-blue-200 shadow-md"
-          />
+          />}
           <button type="button" className="btn btn-outline btn-sm mt-2" onClick={handleNewAvatar}>
             Randomize Avatar
           </button>
