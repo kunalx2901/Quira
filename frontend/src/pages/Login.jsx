@@ -1,26 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { QueryClient, useMutation } from '@tanstack/react-query';
+import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query';
 import { login } from '../lib/api';
+import { useLogin } from '../hooks/useLogin';
 
-const queryClient = new QueryClient();
 
 const Login = () => {
-
+  
   const [loginData, setLoginData] = useState({
     email: '',
     password: '',
   });
-
+  
   const handleChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
   };
-
-  const { mutate:loginMutation, isPending, error } = useMutation({
-    mutationFn: (formData)=>login(formData),
-    onSuccess: async() => {
-      await queryClient.invalidateQueries({queryKey:['authUser']});
-    },
-  });
+  
+  const {loginMutation, isPending, error} = useLogin();
 
   const handleLogin = (e) => {
     e.preventDefault();

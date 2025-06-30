@@ -4,13 +4,13 @@ import toast, { LoaderIcon } from 'react-hot-toast';
 import { completingOnboarding } from '../lib/api.js';
 
 import useAuthUser from '../hooks/useAuthUser.js';
+import { useOnboarding } from '../hooks/useOnboarding.js';
 
 
 export default function OnboardingPage() {
 
-  const queryClient = useQueryClient();
   const authUser = useAuthUser();
-
+  
   const [form, setForm] = useState({
     fullName: authUser?.fullName || "",
     bio: authUser?.bio || "",
@@ -18,16 +18,7 @@ export default function OnboardingPage() {
     location: authUser?.location || ""
   });
 
-  const { mutate: onBoardingMutation, isPending } = useMutation({
-    mutationFn: completingOnboarding,
-    onSuccess: async () => {
-      toast.success('Profile is Completed!');
-      await queryClient.invalidateQueries({ queryKey: ['authUser'] });
-    },
-    onError: (error) => {
-      toast.error(error?.response?.data?.message || "Something went wrong");
-    }
-  });
+  const {onBoardingMutation, isPending} = useOnboarding();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -53,7 +44,7 @@ export default function OnboardingPage() {
 
         <div className="text-center mb-4">
           <label className="block text-sm font-medium mb-2">Profile Avatar</label>
-          {profileAvatar == '' ? <img
+          {form.profileAvatar == '' ? <img
             src="/profile.png"
             alt="Profile Avatar"
             className="mx-auto h-24 w-24 rounded-full border-4 border-blue-200 shadow-md"

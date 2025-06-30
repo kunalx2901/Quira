@@ -1,38 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import {QueryClient, useMutation} from "@tanstack/react-query"
+import {QueryClient, useMutation, useQueryClient} from "@tanstack/react-query"
 import toast from 'react-hot-toast';
 import { signup } from '../lib/api.js';
 import useAuthUser from '../hooks/useAuthUser.js';
+import { useSignup } from '../hooks/useSignUp.js';
 
-const queryClient = new QueryClient();
 
 const SignUp = () => {
-  const authUser = useAuthUser();
-  const isAuthenticated = Boolean(authUser);
-
+  // const authUser = useAuthUser();
+  // const isAuthenticated = Boolean(authUser);
+  
   const [signupData, setSignupData] = useState({
     fullName: '',
     email: '',
     password: '',
   });
-
+  
   const handleChange = (e) => {
     setSignupData({ ...signupData, [e.target.name]: e.target.value });
   };
-
-  const {mutate:signupMutation, isPending, error} = useMutation({
-    mutationFn: (formData) =>{ signup(formData)},
-    onSuccess: async()=> {
-      if(isAuthenticated){
-        toast.success("Sign up Successfull !")
-      }
-    },
-    onError: (error) =>{
-      toast.error("Error Occured !");
-    }
-  })
-
-
+  
+  const {signupMutation, isPending, error} = useSignup();
+  
   const handleSignup = (e) => {
     e.preventDefault();
     signupMutation(signupData);

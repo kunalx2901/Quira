@@ -1,15 +1,29 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { FaSun, FaMoon } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { FaSun, FaMoon, FaBell } from "react-icons/fa";
+import { QueryClient, useMutation, useQueryClient } from "@tanstack/react-query";
+import { logout } from "../lib/api";
+import toast from "react-hot-toast";
+import ThemeSelector from "./ThemeSelector";
+import { useLogout } from "../hooks/useLogout";
+import useAuthUser from "../hooks/useAuthUser";
+import PageLoader from "./PageLoader";
+
 
 const Navbar = () => {
-  const navigate = useNavigate();
+  
   const [theme, setTheme] = React.useState("light");
+  
+  const {logoutMutation, isPending, error} = useLogout();
+  const {isLoading, authUser} = useAuthUser();
+
+  if(isLoading){
+    return <PageLoader/>
+  }
 
   const handleLogout = () => {
-    // Add your logout logic here
+    logoutMutation();
     console.log("User logged out");
-    navigate("/login");
   };
 
   const toggleTheme = () => {
@@ -39,13 +53,23 @@ const Navbar = () => {
           aria-label="Toggle Theme"
         >
           {theme === "light" ? <FaMoon /> : <FaSun />}
+          <span><ThemeSelector/></span>
         </button>
+
+        <Link className="btn btn-ghost text-xl rounded-full" 
+        to={"/notification"}>
+          <FaBell></FaBell>
+        </Link>
 
         {/* User Avatar */}
         <div className="avatar">
-          <div className="w-10 rounded-full ring ring-1 ring-gray-400">
+          {!authUser.profileAvatar
+          ? <div className="w-10 rounded-full ring-1 ring-gray-500">
             <img src="/profile.png" alt="User Avatar" />
           </div>
+          : <div className="w-10 rounded-full ring-1 ring-gray-500">
+            <img src={authUser.profileAvatar} alt="User Avatar" />
+          </div>}
         </div>
 
         {/* Logout */}

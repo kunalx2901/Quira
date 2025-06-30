@@ -3,9 +3,8 @@ import Layout from '../components/Layout'
 
 const HomePage = () => {
   return (
-    <div>
+    <div className='min-h-screen min-w-screen'>
       <Layout showSidebar/>
-      HomePage
     </div>
   )
 }
