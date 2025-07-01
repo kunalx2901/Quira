@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query';
 import { login } from '../lib/api';
 import { useLogin } from '../hooks/useLogin';
+import { useThemeStore } from '../store/useThemeStore';
 
 
 const Login = () => {
-  
+  const {theme,setTheme} = useThemeStore();
   const [loginData, setLoginData] = useState({
     email: '',
     password: '',
@@ -23,8 +24,8 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center md:flex-row h-screen w-screen lg:px-60 lg:py-44" data-theme="light">
-      <div className='border-2 border-gray-200 border-solid shadow-xl shadow-gray-300 rounded-lg flex lg:w-full'>
+    <div className="flex flex-col justify-center items-center md:flex-row h-screen w-screen lg:px-60 lg:py-44" data-theme={theme}>
+      <div className='border-2 border-solid shadow-xl rounded-lg flex lg:w-full'>
         {/* Left side - Illustration */}
         <div className="md:w-1/2 w-full bg-base-200 hidden lg:flex items-center justify-center p-8 text-center">
           <div className='flex justify-center items-center flex-col gap-5'> 
@@ -33,7 +34,7 @@ const Login = () => {
               alt="Chat Illustration"
               className="w-96 h-auto mx-auto"
             />
-            <p className="text-2xl font-bold text-gray-600 mb-6">
+            <p className="text-2xl font-bold mb-6">
               Secure. Simple. Smart Chat.
             </p>
           </div>
@@ -41,7 +42,7 @@ const Login = () => {
 
         {/* Right side - Login Form */}
         <div className="md:w-1/2 w-full flex items-center justify-center bg-base-100 p-8">
-          <form onSubmit={handleLogin} className="w-full max-w-md bg-white shadow-xl rounded-lg p-6 space-y-6">
+          <form onSubmit={handleLogin} className="w-full max-w-md shadow-xl rounded-lg p-6 space-y-6">
             <h2 className="text-2xl font-semibold text-center">Welcome Back</h2>
 
             <div className="form-control">

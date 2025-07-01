@@ -4,12 +4,14 @@ import toast from 'react-hot-toast';
 import { signup } from '../lib/api.js';
 import useAuthUser from '../hooks/useAuthUser.js';
 import { useSignup } from '../hooks/useSignUp.js';
+import { useThemeStore } from '../store/useThemeStore.js';
 
 
 const SignUp = () => {
-  // const authUser = useAuthUser();
-  // const isAuthenticated = Boolean(authUser);
+  const authUser = useAuthUser();
+  const isAuthenticated = Boolean(authUser);
   
+  const {theme,setTheme} = useThemeStore();
   const [signupData, setSignupData] = useState({
     fullName: '',
     email: '',
@@ -30,8 +32,8 @@ const SignUp = () => {
 
   return (
     
-    <div className="flex flex-col justify-center items-center md:flex-row h-screen w-screen lg:px-60 lg:py-44 " data-theme="light">
-      <div className='border-2 border-gray-200 border-solid shadow-xl shadow-gray-300 rounded-lg flex lg:w-full'>
+    <div className="flex flex-col justify-center items-center md:flex-row h-screen w-screen lg:px-60 lg:py-44 " data-theme={theme}>
+      <div className='border-2 border-solid shadow-xl rounded-lg flex lg:w-full'>
           {/* Left side - Branding/Illustration */}
       <div className="md:w-1/2 w-full bg-base-200 hidden lg:flex items-center justify-center p-8 text-center">
         <div>
@@ -40,7 +42,7 @@ const SignUp = () => {
             alt="Chat Illustration"
             className="w-96 h-auto mx-auto"
           />
-          <p className="text-2xl font-bold text-gray-600 mb-6  ">
+          <p className="text-2xl font-bold mb-6  ">
             Connect, collaborate and chat in real time.
           </p>
         </div>
@@ -50,7 +52,7 @@ const SignUp = () => {
       <div className="md:w-1/2 w-full flex items-center justify-center bg-base-100 p-8">
         <form
           onSubmit={handleSignup}
-          className="w-full max-w-md bg-white shadow-xl rounded-lg p-6 space-y-6"
+          className="w-full max-w-md shadow-xl rounded-lg p-6 space-y-6"
         >
           <h2 className="text-2xl font-semibold text-center">Create an Account</h2>
 

@@ -5,12 +5,13 @@ import { completingOnboarding } from '../lib/api.js';
 
 import useAuthUser from '../hooks/useAuthUser.js';
 import { useOnboarding } from '../hooks/useOnboarding.js';
+import { useThemeStore } from '../store/useThemeStore.js';
 
 
 export default function OnboardingPage() {
 
   const authUser = useAuthUser();
-  
+  const {theme,setTheme} = useThemeStore();
   const [form, setForm] = useState({
     fullName: authUser?.fullName || "",
     bio: authUser?.bio || "",
@@ -38,8 +39,8 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 p-6">
-      <div className="w-full max-w-xl bg-white shadow-xl rounded-xl p-8">
+    <div className="min-h-screen flex items-center justify-center p-6" data-theme={theme}>
+      <div className="w-full max-w-xl shadow-xl rounded-xl p-8">
         <h1 className="text-3xl font-bold text-center mb-8 text-blue-600">Complete Your Profile</h1>
 
         <div className="text-center mb-4">
@@ -47,11 +48,11 @@ export default function OnboardingPage() {
           {form.profileAvatar == '' ? <img
             src="/profile.png"
             alt="Profile Avatar"
-            className="mx-auto h-24 w-24 rounded-full border-4 border-blue-200 shadow-md"
+            className="mx-auto h-24 w-24 rounded-full border-4 shadow-md"
           /> : <img
             src={form.profileAvatar}
             alt="Profile Avatar"
-            className="mx-auto h-24 w-24 rounded-full border-4 border-blue-200 shadow-md"
+            className="mx-auto h-24 w-24 rounded-full border-4 shadow-md"
           />}
           <button type="button" className="btn btn-outline btn-sm mt-2" onClick={handleNewAvatar}>
             Randomize Avatar
