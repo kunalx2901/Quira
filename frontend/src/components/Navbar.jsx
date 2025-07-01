@@ -8,12 +8,12 @@ import ThemeSelector from "./ThemeSelector";
 import { useLogout } from "../hooks/useLogout";
 import useAuthUser from "../hooks/useAuthUser";
 import PageLoader from "./PageLoader";
+import { useThemeStore } from "../store/useThemeStore";
 
 
 const Navbar = () => {
   
-  const [theme, setTheme] = React.useState("light");
-  
+  const {theme , setTheme} = useThemeStore();
   const {logoutMutation, isPending, error} = useLogout();
   const {isLoading, authUser} = useAuthUser();
 
@@ -26,14 +26,9 @@ const Navbar = () => {
     console.log("User logged out");
   };
 
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    document.documentElement.setAttribute("data-theme", newTheme);
-  };
 
   return (
-    <div className="navbar bg-base-100 shadow-md px-4 min-w-screen">
+    <div className="navbar bg-base-100 shadow-md px-4 min-w-screen" data-theme={theme}>
       {/* Logo */}
       <div className="flex-1 ">
         <img
@@ -47,14 +42,7 @@ const Navbar = () => {
       {/* Right Side Controls */}
       <div className="flex items-center space-x-4">
         {/* Theme Toggle */}
-        <button
-          className="btn btn-ghost text-xl"
-          onClick={toggleTheme}
-          aria-label="Toggle Theme"
-        >
-          {theme === "light" ? <FaMoon /> : <FaSun />}
-          <span><ThemeSelector/></span>
-        </button>
+        <ThemeSelector/>
 
         <Link className="btn btn-ghost text-xl rounded-full" 
         to={"/notification"}>

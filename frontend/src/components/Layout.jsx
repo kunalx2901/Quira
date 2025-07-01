@@ -1,21 +1,26 @@
-import Navbar from "./Navbar"
-import Sidebar from "./Sidebar"
+// components/Layout.jsx
+import React from 'react';
+import Navbar from './Navbar';
+import Sidebar from './Sidebar';
 
-const Layout = ({children , showSidebar = false}) => {
+const Layout = ({ children }) => {
   return (
-    <div className="min-h-screen">
-        <div className="flex ">
-            {showSidebar && <Sidebar/>}
+    <div className="min-h-screen flex flex-col font-sans">
+      {/* Top Navbar */}
+      <Navbar />
 
-            <div className="flex-1 flex flex-col">
-                <Navbar/>
-                <main className="flex-1 overflow-y-auto">
-                    {children}
-                </main>
-            </div>
-        </div>
+      {/* Sidebar + Main */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar */}
+        <Sidebar />
+
+        {/* Main Content */}
+        <main className="flex-1 p-4 overflow-auto bg-base-100">
+          {children}
+        </main>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

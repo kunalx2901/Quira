@@ -1,12 +1,17 @@
-import React from 'react'
-import Layout from '../components/Layout'
+// pages/HomePage.jsx or /app/page.jsx depending on structure
+import React from 'react';
+import Layout from '../components/Layout';
+import { useThemeStore } from '../store/useThemeStore';
 
 const HomePage = () => {
+  const {theme , setTheme} = useThemeStore();
   return (
-    <div className='min-h-screen min-w-screen'>
-      <Layout showSidebar/>
-    </div>
-  )
-}
+    <Layout>
+    <div className="text-xl" data-theme={theme}>
+        👋 Welcome to the Chat App Homepage!
+      </div>
+    </Layout>
+  );
+};
 
-export default HomePage
+export default HomePage;
