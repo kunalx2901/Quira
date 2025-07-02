@@ -29,3 +29,18 @@ export const completingOnboarding = async (formData) => {
     const res = await axiosInstance.post('/auth/onboarding',formData);
     return res.data;
 };
+
+export const getFriends = async()=>{
+  const res = await axiosInstance.get('/users/getFriends');
+  return res.data;
+}
+
+export const getUsers = async()=>{
+  const res = await axiosInstance.get('/users/getUsers');
+  return res.data;
+}
+
+export const getOutgoingRequest = async()=>{
+  const res = await axiosInstance.get('/users/outgoing-requests');
+  return res.data;
+}
