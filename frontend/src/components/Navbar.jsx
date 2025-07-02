@@ -1,68 +1,66 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { FaSun, FaMoon, FaBell } from "react-icons/fa";
-import { QueryClient, useMutation, useQueryClient } from "@tanstack/react-query";
-import { logout } from "../lib/api";
-import toast from "react-hot-toast";
-import ThemeSelector from "./ThemeSelector";
+import { Link } from "react-router-dom";
+import { FaBell } from "react-icons/fa";
+import { Link2Icon } from "lucide-react";
 import { useLogout } from "../hooks/useLogout";
 import useAuthUser from "../hooks/useAuthUser";
 import PageLoader from "./PageLoader";
+import ThemeSelector from "./ThemeSelector";
 import { useThemeStore } from "../store/useThemeStore";
 
-
 const Navbar = () => {
-  
-  const {theme , setTheme} = useThemeStore();
-  const {logoutMutation, isPending, error} = useLogout();
-  const {isLoading, authUser} = useAuthUser();
+  const { theme } = useThemeStore();
+  const { logoutMutation } = useLogout();
+  const { isLoading, authUser } = useAuthUser();
 
-  if(isLoading){
-    return <PageLoader/>
-  }
+  if (isLoading) return <PageLoader />;
 
   const handleLogout = () => {
     logoutMutation();
     console.log("User logged out");
   };
 
-
   return (
-    <div className="navbar bg-base-100 shadow-md px-4 min-w-screen" data-theme={theme}>
-      {/* Logo */}
-      <div className="flex-1 ">
-        <img
-          src="/image.png" // Replace with your logo path
-          alt="Chat Logo"
-          className="mr-2 h-8 w-32 "
-        />
-        <span className="text-xl font-bold text-primary"></span>
+    <div className="navbar bg-base-100 shadow-md px-4 sm:px-6 md:px-10" data-theme={theme}>
+      {/* Logo - center on mobile, left on desktop */}
+      <div className="flex-1 justify-center sm:justify-start">
+        <Link
+          to="/"
+          className="flex items-center gap-2 font-sans text-xl sm:text-2xl font-bold text-primary"
+        >
+          <Link2Icon size={24} />
+          Quira
+        </Link>
       </div>
 
-      {/* Right Side Controls */}
-      <div className="flex items-center space-x-4">
-        {/* Theme Toggle */}
-        <ThemeSelector/>
+      {/* Right Side Items */}
+      <div className="flex-none flex flex-wrap items-center justify-end">
+        {/* Theme Selector */}
+        <ThemeSelector />
 
-        <Link className="btn btn-ghost text-xl rounded-full" 
-        to={"/notification"}>
-          <FaBell></FaBell>
+        {/* Notifications */}
+        <Link
+          className="btn btn-ghost btn-circle text-lg"
+          to="/notification"
+          aria-label="Notifications"
+        >
+          <FaBell />
         </Link>
 
-        {/* User Avatar */}
+        {/* Avatar */}
         <div className="avatar">
-          {!authUser.profileAvatar
-          ? <div className="w-10 rounded-full ring-1 ring-gray-500">
-            <img src="/profile.png" alt="User Avatar" />
+          <div className="lg:w-10 w-7 rounded-full ring ring-gray-300">
+            <img
+              src={authUser.profileAvatar || "/profile.png"}
+              alt="User Avatar"
+              className="object-cover"
+            />
           </div>
-          : <div className="w-10 rounded-full ring-1 ring-gray-500">
-            <img src={authUser.profileAvatar} alt="User Avatar" />
-          </div>}
         </div>
 
-        {/* Logout */}
+        {/* Logout Button */}
         <button
-          className="btn btn-sm btn-error text-white"
+          className="btn lg:btn-sm btn-xs btn-error text-white ml-2"
           onClick={handleLogout}
         >
           Logout
