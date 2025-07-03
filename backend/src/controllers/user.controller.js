@@ -3,24 +3,26 @@ import User from "../models/User.js";
 
 export async function getRecommendedUser(req,res){
     try {
-        
-        const currentUserId = req.user.id;
-        const currentUser = req.user;
+    const currentUserId = req.user.id;
+    const currentUser = await User.findById(currentUserId).select("friends");
 
-        const recommendedUser = await User.findOne({
-            $and:[
-                {_id :{$ne:currentUserId}}, //exclude me from the list
-                {friends:{$nin:currentUser.friends}} ,//exclude my friends from the list
-                {isOnBoarded:true}
-            ]
-        });
+    // Build an exclusion list
+    const excludeIds = [currentUserId, ...currentUser.friends];
 
-        res.status(200).json(recommendedUser);
+    const recommendedUsers = await User.find({
+        _id: { $nin: excludeIds },
+        isOnBoarded: true
+    }).select("fullName profileAvatar location bio"); // only select required fields
+
+    // console.log("Recommended users:", recommendedUsers);
+
+    res.status(200).json(recommendedUsers);
 
     } catch (error) {
-        console.error("error in showing recommended user",error);
-        res.status(500).json({message: "Error in showing recommended user"});
+        console.error("Error in showing recommended users", error);
+        res.status(500).json({ message: "Error in showing recommended users" });
     }
+
 }
 
 export async function getFriends(req,res){
@@ -143,7 +145,7 @@ export async function getOutgoingRequest(req,res){
         const outgoingRequest = await FriendRequest.findOne({
             sender:req.user.id,
             status:"pending"
-        }).populate("recipient","fullName profileAvatar location");
+        }).populate("recipient","_id fullName profileAvatar location");
 
         if(!outgoingRequest){
             return res.status(401).json({msg:"Unable to find outgoing request"});

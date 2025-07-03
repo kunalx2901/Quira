@@ -60,7 +60,7 @@ const Navbar = () => {
 
         {/* Logout Button */}
         <button
-          className="btn lg:btn-sm btn-xs btn-error text-white ml-2"
+          className="btn lg:btn-sm btn-xs btn-primary ml-2"
           onClick={handleLogout}
         >
           Logout
