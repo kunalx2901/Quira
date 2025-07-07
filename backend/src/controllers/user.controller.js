@@ -25,17 +25,22 @@ export async function getRecommendedUser(req,res){
 
 }
 
-export async function getFriends(req,res){
-    try{
-        const users = await User.findById(req.user.id).select("friends")
-        .populate("friends","fullName profileAvatar location bio") //this helps to get all the friends with all the given features like full name , avatar , bio , location
-    
-        res.status(200).json(users.friends);
-    }catch(e){
-        console.log("error while loading friends list",e);
-        res.status(500).send('error while loading friend list');
-    }
+export async function getFriends(req, res) {
+  try {
+    const user = await User.findById(req.user.id)
+      .select("friends")
+      .populate({
+        path: "friends",
+        select: "fullName profileAvatar location bio",
+      });
+
+    res.status(200).json(user.friends);
+  } catch (e) {
+    console.error("❌ Error while loading friends list:", e);
+    res.status(500).send("Error while loading friend list");
+  }
 }
+
 
 export async function sendFriendRequest(req,res){
     try {
@@ -122,18 +127,18 @@ export async function acceptFriendRequest(req,res){
 export async function getFriendRequest(req,res){
     try{
         // request that i haven't accepted 
-        const incomingRequest = await FriendRequest.findOne({
+        const incomingRequest = await FriendRequest.find({
             recipient:req.user.id,
             status:"pending"
         }).populate("sender","fullName profileAvatar location");
 
         // request that i have accepted 
-        const acceptedRequest = await FriendRequest.findOne({
+        const acceptedRequest = await FriendRequest.find({
             sender:req.user.id,
             status:"accepted"
         }).populate("recipient","fullName profileAvatar bio location");
 
-        res.status(200).json(incomingRequest , acceptedRequest)
+        res.status(200).json({incomingRequest , acceptedRequest})
     }catch(e){
         console.log("error in fetching the incoming request ", e);
         res.status(500).json({msg:"error in fetching the incoming request"});

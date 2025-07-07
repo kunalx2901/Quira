@@ -56,7 +56,6 @@ const HomePage = () => {
   // Update outgoingRequestIds after fetching data
   useEffect(() => {
   const outgoingIds = new Set();
-
   if (outgoingRequests && outgoingRequests.length > 0) {
     outgoingRequests.forEach((request) => {
       outgoingIds.add(request.recipient._id);
@@ -64,7 +63,6 @@ const HomePage = () => {
     setOutgoingRequestIds(outgoingIds);
   }
   }, [outgoingRequests]);
-
 
 
   return (
@@ -94,7 +92,7 @@ const HomePage = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {getFriendsData.map((friend) => (
-              <FriendCard key={friend.id} friend={friend} />
+              <FriendCard key={friend._id} friend={friend} />
             ))}
           </div>
         )}

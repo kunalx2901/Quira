@@ -29,14 +29,7 @@ const userSchema = mongoose.Schema({
         default:false
     },
 
-    friends:[
-        {
-            type:{
-                type:mongoose.Schema.Types.ObjectId,
-                ref:"User"
-            }
-        }
-    ]
+    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 
 },{timestamps:true});
 

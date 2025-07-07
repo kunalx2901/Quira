@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageSquare } from 'lucide-react';
+import { MessageSquare, PenIcon } from 'lucide-react';
 import { Link } from 'react-router';
 
 const FriendCard = ({friend}) => {
@@ -10,18 +10,18 @@ const FriendCard = ({friend}) => {
       <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
         <img
           src={friend.profileAvatar}
-          alt={friend.name}
+          alt={friend.fullName}
           className="w-16 h-16 rounded-full border-2 border-primary object-cover"
         />
         <div className="text-center sm:text-left">
-          <h2 className="text-base sm:text-lg font-semibold ">{friend.name}</h2>
-          <p className="text-sm ">{friend.bio}</p>
+          <h2 className="text-base sm:text-lg font-semibold ">{friend.fullName[0].toUpperCase() + friend.fullName.slice(1)}</h2>
+          <p className="text-sm flex justify-center items-center gap-1"><PenIcon size={14}/> {friend.bio}</p>
         </div>
       </div>
 
       {/* Message Button */}
       <div className="w-full sm:w-auto text-center ">
-        <Link to={`/chat/${friend._id}`} className="btn btn-primary btn-sm w-full sm:w-auto flex items-center justify-center gap-2" onClick={onMessageClick}>
+        <Link to={`/chat/${friend._id}`} className="btn btn-primary btn-sm w-full sm:w-auto flex items-center justify-center gap-2">
           <MessageSquare size={16} />
           Message
         </Link>
