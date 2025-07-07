@@ -142,7 +142,7 @@ export async function getFriendRequest(req,res){
 
 export async function getOutgoingRequest(req,res){
     try{
-        const outgoingRequest = await FriendRequest.findOne({
+        const outgoingRequest = await FriendRequest.find({
             sender:req.user.id,
             status:"pending"
         }).populate("recipient","_id fullName profileAvatar location");
