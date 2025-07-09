@@ -21,7 +21,7 @@ export const getAuthUser = async () => {
     return res.data;
   } catch (error) {
     console.log("error in the getAuthUser: ", error);
-    return null;
+    return null ;
   }
 };
 
@@ -57,5 +57,10 @@ export const acceptFriendRequest = async(requestId)=>{
 
 export const getFriendRequest = async()=>{
   const res = await axiosInstance.get('/users/friend-requests');
+  return res.data;
+}
+
+export const getStreamToken = async ()=>{
+  const res = await axiosInstance.get(`/chat/token`);
   return res.data;
 }

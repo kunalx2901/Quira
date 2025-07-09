@@ -1,7 +1,8 @@
+import { generateStreamToken } from "../models/Stream.js";
 
-export const getStreamToken = (req,res)=>{
+export const getStreamToken = async(req,res)=>{
     try{
-        const token = generateStreamToken(req.user.id);
+        const token = await generateStreamToken(req.user._id);
         res.status(200).json({token});
     }catch(e){
         console.log("error in getStreamToken Controller: ", e);

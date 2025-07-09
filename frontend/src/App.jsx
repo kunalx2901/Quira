@@ -11,6 +11,7 @@ import useAuthUser from './hooks/useAuthUser.js';
 import PageLoader from './components/PageLoader.jsx';
 import OnBoardingPage from './pages/OnBoardingPage.jsx';
 import { useThemeStore } from './store/useThemeStore.js';
+import Layout from './components/Layout.jsx';
 
 const App = () => {
   
@@ -33,7 +34,13 @@ const App = () => {
         <Route path="/login" element={!isAuthenticated ? <Login/> : 
         (!isOnboarded ? <Navigate to={"/onboarding"}/> : <Navigate to={"/"}/> )}></Route>
         <Route path="/signup" element={!isAuthenticated ?<SignUp/>: <Navigate to={"/onboarding"}/>}></Route>
-        <Route path="/chat" element={isAuthenticated ? <ChatPage/> : <Navigate to={"/login"}/>}></Route>
+        <Route path="/chat/:id" element={ 
+        isAuthenticated && isOnboarded ? (
+          <Layout showSidebar={false}>
+            <ChatPage/>
+          </Layout>       
+        ) : 
+        (<Navigate to={!isAuthenticated ? "/login" : "/onboarding" }/>) }></Route>
         <Route path="/call" element={isAuthenticated ? <CallPage/> : <Navigate to={"/login"}/>}></Route>
         <Route path="/notification" element={isAuthenticated ? <NotificationPage/> : <Navigate to={"/login"}/>}></Route>
         <Route path="/onboarding" element={isAuthenticated ? (
