@@ -25,16 +25,15 @@ const NotificationPage = () => {
     },
   });
 
-  const incomingRequestList = friendRequests?.incomingRequests || [];
-  const acceptedRequestList = friendRequests?.acceptedRequests || [];
+  const incomingRequestList = friendRequests?.incomingRequest || [];
+  const acceptedRequestList = friendRequests?.acceptedRequest || [];
 
   return (
     <Layout>
       <div className="px-4 py-6 min-h-screen">
         <h2 className="text-2xl font-bold mb-6">Notifications</h2>
-        {incomingRequestList.length != 0 && acceptedRequestList.length != 0 ? (
-          <div>
-              
+
+        
         <section className="mb-10">
           <h3 className="text-xl font-semibold mb-4">Incoming Friend Requests</h3>
           {loadingRequests ? (
@@ -66,7 +65,8 @@ const NotificationPage = () => {
             </div>
           )}
         </section>
-        
+
+        {/* Accepted Requests */}
         <section>
           <h3 className="text-xl font-semibold mb-4">Accepted Friend Requests</h3>
           {loadingRequests ? (
@@ -99,9 +99,8 @@ const NotificationPage = () => {
               ))}
             </div>
           )}
-        </section> 
-          </div>
-        ) : <NoNotifications/>}
+        </section>
+
 
 
         

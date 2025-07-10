@@ -21,7 +21,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="navbar bg-base-100 shadow-md px-4 sm:px-6 md:px-10" data-theme={theme}>
+    <div className="navbar bg-base-100 shadow-md px-4 sm:px-6 md:px-10 z-50" data-theme={theme}>
       {/* Logo - center on mobile, left on desktop */}
       <div className="flex-1 justify-center sm:justify-start">
         <Link
