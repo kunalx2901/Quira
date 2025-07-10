@@ -77,7 +77,7 @@ const ChatPage = () => {
   }
 
   return (
-    <Chat client={chatClient}>
+    <Chat client={chatClient} data-theme={theme}>
       <Channel channel={channel}>
         <Window>
           <ChannelHeader />

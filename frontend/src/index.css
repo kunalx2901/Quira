@@ -3,21 +3,33 @@
 @tailwind utilities;
 
 /* THEME COLORS */
+/* Light & Dark themes */
 :root[data-theme="light"] {
   --chat-bg1: #a1c4fd;
   --chat-bg2: #c2e9fb;
-  --chat-text: #181515;
-  --chat-panel: #ffffff;
-  --chat-border: #cccccc;
+  --chat-text: #1a1a1a;
+  --chat-input-bg: #fff;
+  --chat-panel: #f5f5f5;
 }
 
 :root[data-theme="dark"] {
   --chat-bg1: #141e30;
   --chat-bg2: #243b55;
-  --chat-text: #f0f0f0;
-  --chat-panel: #1e1e1e;
-  --chat-border: #444;
+  --chat-text: #f5f5f5;
+  --chat-input-bg: #1e1e1e;
+  --chat-panel: #2a2a2a;
 }
+
+/* Apply text color globally */
+.str-chat__container,
+.str-chat__list,
+.str-chat__message,
+.str-chat__message-input,
+.str-chat__message-input input {
+  color: var(--chat-text) !important;
+  transition: color 0.3s ease, background 0.3s ease;
+}
+
 
 /* ANIMATED BACKGROUND */
 @keyframes moveGradient {
@@ -51,7 +63,7 @@
   justify-content: center;
   background: linear-gradient(270deg, var(--chat-bg1), var(--chat-bg2));
   background-size: 400% 400%;
-  animation: moveGradient 1s ease infinite;
+  animation: moveGradient 12s ease infinite;
   overflow: hidden;
   padding: 0;
   margin: 0;
@@ -106,7 +118,7 @@
 .str-chat__message-input {
   padding: 14px;
   border-top: 1px solid var(--chat-border);
-  background-color: transparent;
+  background-color: whitesmoke;
   display: flex;
   gap: 10px;
 }
