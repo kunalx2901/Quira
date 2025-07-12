@@ -18,6 +18,8 @@ import {
 } from 'stream-chat-react';
 
 import { useThemeStore } from '../store/useThemeStore';
+import VideoCallButton from '../components/CallButton';
+import CallButton from '../components/CallButton';
 
 const STREAM_API_KEY = import.meta.env.VITE_STREAM_API_URL; 
 
@@ -76,14 +78,29 @@ const ChatPage = () => {
     return <ChatLoader />;
   }
 
+  const handleVideoCall = () => {
+    if(channel){
+      const callId = `${window.crypto.randomUUID()}-${Date.now()}`;
+
+      channel.sendMessage({
+        text:`Let's start a video call! ${callId}`,
+      })
+
+      toast.success("Video call initiated! Please check your messages for the call link.");
+    }
+  }
+
   return (
     <Chat client={chatClient} data-theme={theme}>
       <Channel channel={channel}>
+        <div className='w-full relative'>
         <Window>
+          <CallButton onClick={handleVideoCall}/>
           <ChannelHeader />
           <MessageList />
           <MessageInput focus />
         </Window>
+        </div>
         <Thread />
       </Channel>
     </Chat>

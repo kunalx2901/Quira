@@ -27,6 +27,7 @@
 .str-chat__message-input,
 .str-chat__message-input input {
   color: var(--chat-text) !important;
+
   transition: color 0.3s ease, background 0.3s ease;
 }
 
@@ -159,7 +160,7 @@
   }
 
   .str-chat__message-input {
-    padding: 10px;
+    padding: 1px;
     flex-wrap: wrap;
   }
 
